@@ -1,0 +1,11 @@
+# Сборка
+build/
+
+# Ключ подписи — никогда не публикуйте его
+keystore/
+*.jks
+*.keystore
+
+# Прочее
+icon_src/preview.png
+.DS_Store
