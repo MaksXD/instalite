@@ -65,6 +65,13 @@ for name, k in densities.items():
     save(bg, f"{res}/mipmap-{name}/ic_launcher_bg.png", int(108 * k))
     save(fg, f"{res}/mipmap-{name}/ic_launcher_fg.png", int(108 * k))
 
+# Значки для сайта и iPhone (экран «Домой»): iOS сам скругляет углы, поэтому квадрат без прозрачности
+docs = os.path.join(os.path.dirname(__file__), "..", "docs")
+full = gradient(S)
+full.alpha_composite(glyph(S, scale=1.55))
+save(full.convert("RGB"), f"{docs}/apple-touch-icon.png", 180)
+save(out, f"{docs}/favicon.png", 64)
+
 # Превью для проверки
 prev = Image.new("RGBA", (S, S), (255, 255, 255, 255))
 prev.alpha_composite(out)

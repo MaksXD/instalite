@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>InstaLite</title>
+<meta name="description" content="Instagram без Reels и рекомендаций для Android и iPhone: только лента подписок.">
+<meta property="og:title" content="InstaLite: Instagram без Reels и рекомендаций">
+<meta property="og:description" content="Только лента подписок. Stories и Direct работают. Для Android и iPhone.">
+<meta property="og:image" content="https://maksxd.github.io/instalite/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #15131f; --muted: #6b6880; --card: #f7f5ff; --border: #e6e2f5;
+    --accent: #6f4cff; --accent-strong: #5a36f0; --accent-fg: #ffffff; --ok: #1f9d55; --no: #d64545;
+    --seg: #eeebfa;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d0c14; --fg: #f1effa; --muted: #a09cb8; --card: #17151f; --border: #2a273a;
+            --accent: #8a6dff; --accent-strong: #9d85ff; --seg: #1f1c2c; --ok: #4ade80; --no: #f87171; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body { font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom); }
+  main { max-width: 560px; margin: 0 auto; padding: 32px 0 40px; }
+  a { color: var(--accent-strong); }
+
+  header { text-align: center; }
+  header img { width: 96px; height: 96px; border-radius: 22%; box-shadow: 0 10px 30px rgba(90, 54, 240, .28); }
+  h1 { font-size: 30px; margin: 16px 0 4px; letter-spacing: -.02em; }
+  .tag { font-size: 18px; margin: 0; }
+  .sub { color: var(--muted); margin: 6px 0 0; }
+
+  .seg { display: flex; gap: 4px; background: var(--seg); padding: 4px; border-radius: 12px; margin: 28px 0 20px; }
+  .seg button { flex: 1; border: 0; background: transparent; color: var(--muted); font: inherit; font-weight: 600;
+                padding: 10px 0; border-radius: 9px; cursor: pointer; }
+  .seg button[aria-selected="true"] { background: var(--bg); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  .steps > li { counter-increment: s; position: relative; background: var(--card); border: 1px solid var(--border);
+                border-radius: 16px; padding: 16px 16px 16px 60px; margin-bottom: 12px; }
+  .steps > li::before { content: counter(s); position: absolute; left: 16px; top: 16px; width: 30px; height: 30px;
+                        border-radius: 50%; background: var(--accent); color: var(--accent-fg); font-weight: 700;
+                        display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .steps h3 { margin: 3px 0 4px; font-size: 17px; }
+  .steps p { margin: 4px 0 0; color: var(--muted); }
+  .steps b { color: var(--fg); font-weight: 600; }
+  .btn { display: inline-block; margin-top: 12px; padding: 11px 18px; border-radius: 11px; background: var(--accent);
+         color: var(--accent-fg); text-decoration: none; font-weight: 600; }
+  .btn:active { transform: scale(.98); }
+  .note { font-size: 14px; color: var(--muted); background: transparent; border: 1px dashed var(--border);
+          border-radius: 12px; padding: 12px 14px; margin: 4px 0 0; }
+  [hidden] { display: none !important; }
+
+  h2 { font-size: 20px; margin: 36px 0 12px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .cols { grid-template-columns: 1fr; } }
+  .box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; }
+  .box h4 { margin: 0 0 6px; font-size: 15px; }
+  .box ul { margin: 0; padding-left: 18px; }
+  .box li { margin: 4px 0; }
+  .yes h4 { color: var(--ok); } .no h4 { color: var(--no); }
+
+  footer { margin-top: 36px; font-size: 13px; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="apple-touch-icon.png" alt="Логотип InstaLite">
+    <h1>InstaLite</h1>
+    <p class="tag">Instagram без Reels и рекомендаций</p>
+    <p class="sub">Только лента подписок. Stories и Direct работают.</p>
+  </header>
+
+  <div class="seg" role="tablist" aria-label="Платформа">
+    <button role="tab" id="tab-ios" aria-controls="ios" aria-selected="false">iPhone</button>
+    <button role="tab" id="tab-android" aria-controls="android" aria-selected="false">Android</button>
+  </div>
+
+  <section id="ios" role="tabpanel" aria-labelledby="tab-ios" hidden>
+    <ol class="steps">
+      <li>
+        <h3>Установите Userscripts</h3>
+        <p>Бесплатное расширение для Safari, через него работает фильтр InstaLite.</p>
+        <a class="btn" href="https://apps.apple.com/app/userscripts/id1463298887">Открыть App Store</a>
+      </li>
+      <li>
+        <h3>Включите расширение</h3>
+        <p><b>Настройки → Приложения → Safari → Расширения → Userscripts</b> и включите его.
+          В iOS 17 и старше: <b>Настройки → Safari → Расширения</b>.</p>
+      </li>
+      <li>
+        <h3>Установите фильтр</h3>
+        <p>Откройте скрипт в Safari, нажмите значок расширений в адресной строке (<b>аА</b> или кусочек пазла) →
+          <b>Userscripts</b> → <b>Install</b>.</p>
+        <a class="btn" href="instalite.user.js">Открыть скрипт</a>
+      </li>
+      <li>
+        <h3>Добавьте значок на экран «Домой»</h3>
+        <p>На следующей странице: <b>Поделиться → На экран «Домой»</b>. Если есть переключатель
+          <b>«Открыть как веб-приложение»</b>, выключите его.</p>
+        <a class="btn" href="go.html?add">Добавить значок</a>
+      </li>
+    </ol>
+    <p class="note">При первом открытии Instagram Safari может спросить, разрешить ли Userscripts работать на instagram.com.
+      Разрешите. Если фильтр не срабатывает: <b>аА → Управление расширениями</b> и проверьте, что Userscripts включён.</p>
+  </section>
+
+  <section id="android" role="tabpanel" aria-labelledby="tab-android" hidden>
+    <ol class="steps">
+      <li>
+        <h3>Скачайте приложение</h3>
+        <p>Файл весит около 80 КБ. Нужен Android 7.0 или новее.</p>
+        <a class="btn" href="https://github.com/MaksXD/instalite/releases/latest/download/InstaLite.apk">Скачать APK</a>
+      </li>
+      <li>
+        <h3>Установите</h3>
+        <p>Откройте скачанный файл и разрешите установку из этого источника.</p>
+      </li>
+      <li>
+        <h3>Если появится предупреждение</h3>
+        <p>Play Защита предупреждает обо всех приложениях не из Play Маркета: <b>Подробнее → Всё равно установить</b>.</p>
+      </li>
+      <li>
+        <h3>Войдите в Instagram</h3>
+        <p>Логин и пароль вводятся на официальном сайте Instagram, приложение их не видит.</p>
+      </li>
+    </ol>
+  </section>
+
+  <h2>Что внутри</h2>
+  <div class="cols">
+    <div class="box yes">
+      <h4>Остаётся</h4>
+      <ul>
+        <li>Лента подписок по времени</li>
+        <li>Stories и Direct</li>
+        <li>Профили, лайки, комментарии</li>
+        <li>Поиск людей</li>
+        <li>Рилс, который прислал друг</li>
+      </ul>
+    </div>
+    <div class="box no">
+      <h4>Убрано</h4>
+      <ul>
+        <li>Вкладка Reels</li>
+        <li>Сетка «Интересное»</li>
+        <li>«Рекомендации для вас»</li>
+        <li>Рекомендованные посты</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>Без рекламы, аналитики и сбора данных. Код открыт:
+      <a href="https://github.com/MaksXD/instalite">github.com/MaksXD/instalite</a> (MIT).</p>
+    <p>Неофициальный проект, не связан с Instagram и Meta Platforms, Inc. Instagram является товарным знаком Meta Platforms, Inc.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var tabs = { ios: document.getElementById('tab-ios'), android: document.getElementById('tab-android') };
+  function show(name) {
+    ['ios', 'android'].forEach(function (k) {
+      tabs[k].setAttribute('aria-selected', String(k === name));
+      document.getElementById(k).hidden = k !== name;
+    });
+  }
+  tabs.ios.addEventListener('click', function () { show('ios'); });
+  tabs.android.addEventListener('click', function () { show('android'); });
+  var ua = navigator.userAgent;
+  var isApple = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  show(location.hash === '#android' ? 'android' : location.hash === '#iphone' ? 'ios' : (isApple ? 'ios' : 'android'));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>InstaLite</title>
+<meta name="apple-mobile-web-app-title" content="InstaLite">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<script>
+/*
+ * Значок InstaLite на экране «Домой» ведёт сюда.
+ * Обычный запуск → сразу открываем ленту подписок Instagram в Safari (там работает фильтр).
+ * ?add          → режим добавления: показываем подсказку и убираем ?add из адреса,
+ *                 чтобы значок сохранился с чистой ссылкой.
+ */
+(function () {
+  var TARGET = 'https://www.instagram.com/?variant=following';
+  var root = document.documentElement;
+  var params = new URLSearchParams(location.search);
+  if (params.has('add')) {
+    history.replaceState(null, '', location.pathname);
+    root.className = 'mode-add';
+    return;
+  }
+  var standalone = window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  if (standalone) {
+    // Значок добавлен как веб-приложение: там расширения Safari не работают
+    root.className = 'mode-webapp';
+    return;
+  }
+  root.className = 'mode-go';
+  location.replace(TARGET);
+})();
+</script>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #15131f; --muted: #6b6880; --card: #f5f3ff; --border: #e4e0f5;
+    --accent: #6f4cff; --accent-fg: #ffffff;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d0c14; --fg: #f1effa; --muted: #a09cb8; --card: #1a1826; --border: #2c2940; --accent: #8a6dff; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font: 17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  }
+  main { width: 100%; max-width: 420px; text-align: center; }
+  img.logo { width: 88px; height: 88px; border-radius: 22%; box-shadow: 0 8px 24px rgba(80, 50, 200, .25); }
+  h1 { font-size: 24px; margin: 16px 0 6px; }
+  p { margin: 8px 0; color: var(--muted); }
+  ol { text-align: left; margin: 20px 0 0; padding: 16px 16px 16px 36px; background: var(--card);
+       border: 1px solid var(--border); border-radius: 16px; }
+  li { margin: 8px 0; }
+  b { color: var(--fg); }
+  .share { display: inline-block; width: 18px; height: 18px; vertical-align: -3px; }
+  a.btn { display: inline-block; margin-top: 18px; padding: 12px 22px; border-radius: 12px;
+          background: var(--accent); color: var(--accent-fg); text-decoration: none; font-weight: 600; }
+  .panel { display: none; }
+  .mode-add .panel-add, .mode-webapp .panel-webapp, .mode-go .panel-go { display: block; }
+  html:not([class]) .panel-go { display: block; }
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="apple-touch-icon.png" alt="">
+
+  <section class="panel panel-go">
+    <h1>InstaLite</h1>
+    <p>Открываю Instagram…</p>
+    <a class="btn" href="https://www.instagram.com/?variant=following">Открыть</a>
+  </section>
+
+  <section class="panel panel-add">
+    <h1>Добавьте значок</h1>
+    <ol>
+      <li>Нажмите кнопку <b>«Поделиться»</b>
+        <svg class="share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>
+        внизу экрана.</li>
+      <li>Выберите <b>«На экран „Домой“»</b>.</li>
+      <li>Если есть переключатель <b>«Открыть как веб-приложение»</b>, <b>выключите</b> его, иначе фильтр не сработает.</li>
+      <li>Нажмите <b>«Добавить»</b>.</li>
+    </ol>
+    <p>Готово: значок InstaLite будет открывать ленту подписок в Safari.</p>
+  </section>
+
+  <section class="panel panel-webapp">
+    <h1>Значок нужно пересоздать</h1>
+    <p>Он добавлен как веб-приложение, а там расширения Safari, в том числе фильтр InstaLite, не работают.</p>
+    <p>Удалите значок и добавьте его заново, выключив <b>«Открыть как веб-приложение»</b>.</p>
+    <a class="btn" href="https://www.instagram.com/?variant=following">Всё равно открыть Instagram</a>
+  </section>
+</main>
+</body>
+</html>
